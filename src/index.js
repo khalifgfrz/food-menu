@@ -25,17 +25,20 @@ function Header() {
 }
 
 function Menu() {
+  const foods = data;
+  const numFoods = foods.length;
   return (
     <main className="menu">
       <h2>Menu Kita</h2>
-      <ul className="foods">
-        {data.map((food) => (
-          <Food foodObj={food} key={food.nama} />
-        ))}
-      </ul>
-      {/* <Food nama="Nasi Goreng" deskripsi="Nasi yang digoreng dengan bumbu rempah khas Indonesia" harga={25000} foto="food/nasi-goreng.jpg" stok={Math.random() >= 0.5 ? true : false} />
-
-      <Food nama="Sate Ayam" deskripsi="Sate ayam yang ditusuk dan dibakar, disajikan dengan bumbu kacang" harga={15000} foto="food/sate-ayam.jpg" stok={Math.random() >= 0.5 ? true : false} /> */}
+      {numFoods > 0 ? (
+        <ul className="foods">
+          {data.map((food) => (
+            <Food foodObj={food} key={food.nama} />
+          ))}
+        </ul>
+      ) : (
+        <p>Kosong gan. Besok dateng lagi.</p>
+      )}
     </main>
   );
 }
@@ -44,15 +47,34 @@ function Footer() {
   const hour = new Date().getHours();
   const jamBuka = 10;
   const jamTutup = 22;
+  const isOpen = hour >= jamBuka && hour <= jamTutup;
 
-  if (hour < jamBuka || hour > jamTutup) {
-    alert("Warteg Romadon Tutup");
+  if (isOpen) {
+    return <FooterOpenHour jamBuka={jamBuka} jamTutup={jamTutup} />;
   } else {
-    alert("Warteg Romadon Buka");
+    return <FooterClosedHour jamBuka={jamBuka} jamTutup={jamTutup} />;
   }
+}
+
+function FooterOpenHour(props) {
   return (
     <footer className="footer">
-      {new Date().getFullYear()} Warteg Romadon | jam buka {jamBuka} - jam tutup {jamTutup}
+      <div className="order">
+        <p>
+          {new Date().getFullYear()} Warteg Romadon | jam buka {props.jamBuka} - jam tutup {props.jamTutup}
+        </p>
+        <button className="btn">Order</button>
+      </div>
+    </footer>
+  );
+}
+
+function FooterClosedHour(props) {
+  return (
+    <footer className="footer">
+      <p>
+        Maaf gan masih tutup. Coba datang lagi sekitar jam {props.jamBuka}-{props.jamTutup}
+      </p>
     </footer>
   );
 }
